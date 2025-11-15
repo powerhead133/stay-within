@@ -1,11 +1,6 @@
-# Build directory
-build/
-
 .idea
-*.csv
 
-# Go build artifacts
-*.exe
+# Go build artifacts (but keep build/ directory binaries)
 *.exe~
 *.dll
 *.so

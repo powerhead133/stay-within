@@ -1,8 +1,54 @@
-# Absence Calculator
+# Stay Within - Absence Calculator
 
 A CLI tool to calculate days spent abroad in rolling time windows, helping you track compliance with visa, immigration, and tax residency requirements. Supports customizable rolling windows and absence limits for any country's requirements.
 
 **Written in Go** - Fast, cross-platform, standalone binaries with no dependencies.
+
+## 🚀 TL;DR - Just Want to Use It?
+
+1. **Download/clone this repo**
+2. **Choose your binary** from the `build/` folder:
+   - macOS Apple Silicon: `build/stay-within-macos-arm64`
+   - macOS Intel: `build/stay-within-macos-amd64`
+   - Windows: `build/stay-within-windows-amd64.exe`
+3. **Create your trips CSV** (see `trips.csv` for example)
+4. **Run it**: `./build/stay-within-macos-arm64 your-trips.csv`
+
+**That's it! No installation, no dependencies, no build required.**
+
+### Example Output
+
+```
+==========================================================================================
+UK ABSENCE CALCULATOR - Rolling 12-Month Window Analysis
+==========================================================================================
+
+Allowed absence: 180 days in any rolling 12-month period
+
+------------------------------------------------------------------------------------------
+Trip Start   | Trip End     | Days   | Days in 12mo Window  | Days Remaining
+------------------------------------------------------------------------------------------
+25.05.2023   | 10.08.2023   |     78 |                   78 |          102
+15.09.2023   | 20.09.2023   |      6 |                   84 |           96
+24.12.2023   | 04.01.2024   |     12 |                   96 |           84
+------------------------------------------------------------------------------------------
+
+==========================================================================================
+CURRENT STATUS - As of Today
+==========================================================================================
+
+Today's date: 15.11.2025
+Last trip ended: 30.10.2025
+Days in UK since last trip: 16 days
+Rolling 12-month window: 15.11.2024 to 15.11.2025
+
+------------------------------------------------------------------------------------------
+Days spent outside UK (last 12 months): 130 days
+Days remaining (out of 180):            50 days
+------------------------------------------------------------------------------------------
+
+✓ You are within the 180-day limit.
+```
 
 ## Features
 
@@ -24,33 +70,32 @@ A CLI tool to calculate days spent abroad in rolling time windows, helping you t
 
 ## Quick Start
 
-### 📦 Building the Binaries
+### 📦 Pre-built Binaries (No Build Required!)
 
-Build binaries for all platforms:
+**Ready to use!** Pre-built binaries are included in the `build/` directory. Just download and run:
 
-```bash
-make all
-```
-
-This creates:
-- `build/stay-within-macos-arm64` - macOS Apple Silicon (M1/M2/M3)
+- `build/stay-within-macos-arm64` - macOS Apple Silicon (M1/M2/M3/M4)
 - `build/stay-within-macos-amd64` - macOS Intel
 - `build/stay-within-windows-amd64.exe` - Windows 64-bit
 
-Or build for specific platforms:
-```bash
-make build-macos-arm      # macOS Apple Silicon only
-make build-macos-intel    # macOS Intel only
-make build-windows        # Windows 64-bit only
-make build-linux          # Linux 64-bit (bonus)
-```
+**No installation, no dependencies, no build step needed!**
 
-### Using the Binaries
+### Using the Pre-built Binaries
 
-#### macOS Apple Silicon (M1/M2/M3)
+#### macOS Apple Silicon (M1/M2/M3/M4)
 ```bash
+# Clone or download this repository
+git clone <your-repo-url>
+cd stay-within
+
+# Run directly - no build needed!
 ./build/stay-within-macos-arm64 trips.csv
+
+# Check future status
 ./build/stay-within-macos-arm64 trips.csv --date 01.06.2026
+
+# For Schengen visa (6 months, 90 days)
+./build/stay-within-macos-arm64 trips.csv --window 6 --limit 90
 ```
 
 #### macOS Intel
@@ -61,14 +106,21 @@ make build-linux          # Linux 64-bit (bonus)
 
 #### Windows
 ```cmd
+REM Clone or download this repository, then:
+cd stay-within
+
+REM Run directly - no build needed!
 .\build\stay-within-windows-amd64.exe trips.csv
+
+REM Check future status
 .\build\stay-within-windows-amd64.exe trips.csv --date 01.06.2026
 ```
 
-#### Linux
+#### Linux (Build Required)
 ```bash
+# Linux users need to build from source
+make build-linux
 ./build/stay-within-linux-amd64 trips.csv
-./build/stay-within-linux-amd64 trips.csv --date 01.06.2026
 ```
 
 ## CSV File Format
@@ -158,7 +210,9 @@ Shows:
 - Total absence days in the rolling 12-month window
 - Remaining allowance
 
-## Building from Source
+## Building from Source (Optional)
+
+**Note:** Pre-built binaries are included in `build/` - you don't need to build unless you want to modify the code!
 
 ### Prerequisites
 
@@ -247,77 +301,29 @@ This tool can be configured for various country requirements:
 
 **Important:** This tool is for tracking purposes only. Consult with immigration or tax professionals for official guidance specific to your situation.
 
-## Examples
+## Usage Examples
 
-### Example 1: Check current status
+### Check current status
 ```bash
 ./build/stay-within-macos-arm64 trips.csv
 ```
 
-Sample output:
-```
-==========================================================================================
-UK ABSENCE CALCULATOR - Rolling 12-Month Window Analysis
-==========================================================================================
-
-Allowed absence: 180 days in any rolling 12-month period
-
-------------------------------------------------------------------------------------------
-Trip Start   | Trip End     | Days   | Days in 12mo Window  | Days Remaining
-------------------------------------------------------------------------------------------
-25.05.2023   | 10.08.2023   |     78 |                   78 |          102
-15.09.2023   | 20.09.2023   |      6 |                   84 |           96
-24.12.2023   | 04.01.2024   |     12 |                   96 |           84
-05.01.2024   | 15.01.2024   |     11 |                  107 |           73
-30.03.2024   | 03.04.2024   |      5 |                  112 |           68
-07.04.2024   | 20.04.2024   |     14 |                  126 |           54
-------------------------------------------------------------------------------------------
-
-Note: The 12-month window ends on each trip's end date and starts 12 months before.
-Days in window include all days from trips that overlap with that window.
-
-==========================================================================================
-CURRENT STATUS - As of Today
-==========================================================================================
-
-Today's date: 14.11.2025
-Last trip ended: 20.04.2024
-Days in UK since last trip: 208 days
-Rolling 12-month window: 14.11.2024 to 14.11.2025
-
-------------------------------------------------------------------------------------------
-Days spent outside UK (last 12 months): 130 days
-Days remaining (out of 180):            50 days
-------------------------------------------------------------------------------------------
-
-✓ You are within the 180-day limit.
-```
-
-### Example 2: Plan a future trip
+### Plan a future trip
 ```bash
 ./build/stay-within-macos-arm64 trips.csv --date 01.03.2026
 ```
 
-Sample output shows:
-```
-==========================================================================================
-ESTIMATED STATUS - As of 01.03.2026
-==========================================================================================
-
-Estimated date: 01.03.2026
-Last trip ended: 20.04.2024
-Days in UK since last trip: 315 days
-Rolling 12-month window: 01.03.2025 to 01.03.2026
-
-------------------------------------------------------------------------------------------
-Days spent outside UK (last 12 months): 104 days
-Days remaining (out of 180):            76 days
-------------------------------------------------------------------------------------------
-
-✓ You are within the 180-day limit.
+### Different visa requirements (Schengen: 6 months, 90 days)
+```bash
+./build/stay-within-macos-arm64 trips.csv --window 6 --limit 90
 ```
 
-This helps you plan future trips by showing how many days you'll have remaining at any future date.
+### Custom tracking period
+```bash
+./build/stay-within-macos-arm64 trips.csv --window 24 --limit 365
+```
+
+See the example output in the [TL;DR section](#-tldr---just-want-to-use-it) above to understand what the tool displays.
 
 ## Files in This Repository
 
@@ -344,28 +350,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues or questions, please refer to the source code and documentation.
 
-## Changelog
-
-### Version 3.0 (Go Rewrite)
-- **REWRITTEN IN GO**: Complete rewrite from PHP to Go
-- **Cross-platform binaries**: Native support for macOS (ARM64 & Intel), Windows, Linux
-- **Zero dependencies**: Standalone binaries, no runtime required
-- **Faster performance**: Native compiled binaries
-- **Same features**: All functionality from v2.0 maintained
-- Customizable rolling window period via `--window` parameter
-- Customizable absence limit via `--limit` parameter
-- Support for any country's visa/residency requirements (UK, Schengen, etc.)
-- Flexible CSV parsing (auto-detects headers, multiple date formats)
-- Simplified CSV format (only start/end dates required)
-- Days calculated automatically
-
-### Version 2.0 (PHP)
-- Customizable rolling window period via `--window` parameter
-- Customizable absence limit via `--limit` parameter
-- Flexible CSV parsing (auto-detects headers, multiple date formats)
-- Simplified CSV format (only start/end dates required)
-
-### Version 1.0 (PHP)
-- Initial PHP release
-- Rolling 12-month window calculations
-- Current and estimated date projections
